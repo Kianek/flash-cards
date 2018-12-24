@@ -29,6 +29,5 @@ db.on('error', err => console.log(err));
 db.once('open', () => {
   require('./routes/users')(server);
   require('./routes/collections')(server);
-  require('./routes/cards')(server);
   console.log(`Server running on port ${config.PORT}`);
 });
