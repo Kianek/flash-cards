@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const User = require('./models/User');
 const authFailed = 'Authentication Failed';
 
 exports.authenticate = (email, password) => {
@@ -8,11 +7,13 @@ exports.authenticate = (email, password) => {
     try {
       const user = await User.findOne({ email });
 
-      bcrypt.compare(user.password, password, (err, isMatch) => {
+      bcrypt.compare(password, user.password, (err, isMatch) => {
         if (err) throw err;
-        if (!isMatch) throw authFailed;
-
-        resolve(user);
+        if (isMatch) {
+          resolve(user);
+        } else {
+          reject(authFailed);
+        }
       });
     } catch (err) {
       reject(authFailed);
