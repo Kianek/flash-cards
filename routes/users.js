@@ -16,7 +16,7 @@ module.exports = server => {
     User.findOne({ email }, (err, user) => {
       if (user) {
         res.json({ msg: 'That email is already registered' });
-        next();
+        return next();
       }
 
       // If not registered, create new user, hash password, and save
@@ -29,7 +29,7 @@ module.exports = server => {
           try {
             await newUser.save();
             res.send(201);
-            next();
+            return next();
           } catch (err) {
             return next(new errors.InternalError(err));
           }
@@ -56,6 +56,7 @@ module.exports = server => {
 
       // Respond with token
       res.send({ iat, exp, token });
+      return next();
     } catch (err) {
       // User Unauthorized
       return next(new errors.UnauthorizedError(err));
