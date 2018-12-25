@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
+const CollectionSchema = require('./Collection');
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -30,6 +31,7 @@ const UserSchema = new mongoose.Schema({
       lowercase: true,
     },
   },
+  collections: [CollectionSchema],
 });
 
 UserSchema.plugin(timestamp);
