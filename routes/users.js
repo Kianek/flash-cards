@@ -1,5 +1,6 @@
 const auth = require('../auth');
 const config = require('../config');
+const rjwt = require('restify-jwt-community');
 const jwt = require('jsonwebtoken');
 const errors = require('restify-errors');
 const bcrypt = require('bcryptjs');
@@ -7,6 +8,17 @@ const User = require('../models/User');
 const usersUrl = '/api/users';
 
 module.exports = server => {
+  // Test Route
+  // Private
+  server.get(
+    `${usersUrl}/test`,
+    rjwt({ secret: config.JWT_SECRET }),
+    async (req, res, next) => {
+      res.send('Auth verified!');
+      return next();
+    }
+  );
+
   // Register Account
   // Public
   server.post(`${usersUrl}/register`, async (req, res, next) => {
@@ -65,7 +77,23 @@ module.exports = server => {
 
   // Edit Account
   // Private
+  server.post(
+    `${usersUrl}/edit`,
+    rjwt({ secret: config.JWT_SECRET }),
+    async (req, res, next) => {
+      res.send('Edit authorized!');
+      return next();
+    }
+  );
 
   // Delete Account
   // Private
+  server.del(
+    `${usersUrl}/delete`,
+    rjwt({ secret: config.JWT_SECRET }),
+    async (req, res, next) => {
+      res.send('Account deletion authorized!');
+      return next();
+    }
+  );
 };
