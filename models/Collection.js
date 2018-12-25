@@ -3,10 +3,6 @@ const timestamp = require('mongoose-timestamp');
 const Schema = mongoose.Schema;
 
 const CollectionSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  },
   subject: {
     type: String,
     required: true,
@@ -14,10 +10,6 @@ const CollectionSchema = new Schema({
   },
   cards: [
     {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
       subject: {
         type: String,
         require: true,
@@ -35,7 +27,6 @@ const CollectionSchema = new Schema({
       },
       hint: {
         type: String,
-        require: true,
         trim: true,
       },
     },
@@ -44,5 +35,5 @@ const CollectionSchema = new Schema({
 
 CollectionSchema.plugin(timestamp);
 
-const Collection = mongoose.model('Collection', CollectionSchema);
-module.exports = Collection;
+// const Collection = mongoose.model('Collection', CollectionSchema);
+module.exports = CollectionSchema;
