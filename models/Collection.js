@@ -12,17 +12,14 @@ const CollectionSchema = new Schema({
     {
       subject: {
         type: String,
-        require: true,
         trim: true,
       },
       question: {
         type: String,
-        require: true,
         trim: true,
       },
       answer: {
         type: String,
-        require: true,
         trim: true,
       },
       hint: {
