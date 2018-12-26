@@ -1,12 +1,14 @@
 const restify = require('restify');
 const mongoose = require('mongoose');
 const config = require('./config');
+const logger = require('morgan');
 const rjwt = require('restify-jwt-community');
 
 const server = restify.createServer();
 
 // Middleware
 server.use(restify.plugins.bodyParser());
+server.use(logger('combined'));
 
 // Protect Routes
 // server.use(
