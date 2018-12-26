@@ -36,5 +36,9 @@ module.exports = server => {
 
   // Get Single Collection
 
+  // Create Collection
+
   // Delete Single Collection
+
+  // Delete All Collections
 };
