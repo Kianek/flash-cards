@@ -42,12 +42,12 @@ module.exports = server => {
     `${collectionsUrl}/create`,
     rjwt({ secret: config.JWT_SECRET }),
     async (req, res, next) => {
-      // Extract collection info from request body
       const { subject } = req.body;
 
       try {
         // Attempt to locate the current user
         const user = await User.findById(req.user._id);
+        // TODO: remove console log
         console.log(user);
         if (!user) {
           return next(new errors.NotFoundError('No such user'));
@@ -57,6 +57,7 @@ module.exports = server => {
         const subjectAlreadyExists = user.collections.find(
           col => col.subject === subject
         );
+        // TODO: remove console log
         console.log(subjectAlreadyExists);
         if (subjectAlreadyExists) {
           return next(
@@ -64,7 +65,7 @@ module.exports = server => {
           );
         }
 
-        // Add collection to user
+        // New object with the chosen subject name
         const newCollection = {
           subject,
           cards: [],
@@ -72,18 +73,55 @@ module.exports = server => {
 
         user.collections.unshift(newCollection);
         const updatedUser = await user.save();
+        // TODO: remove this console log
         console.log(updatedUser);
         res.send(updatedUser.collections);
         return next();
       } catch (err) {
         return next(new errors.NotFoundError(err));
       }
-      // Add collection to User
-      // If collection with same name exists, reject attempt
     }
   );
 
   // Delete Single Collection
+  server.del(
+    `${collectionsUrl}/:col_id/delete`,
+    rjwt({ secret: config.JWT_SECRET }),
+    async (req, res, next) => {
+      // Find user
+      try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+          return next(new errors.NotFoundError('Unable to find user'));
+        }
+
+        // Confirm that the chosen collection exists
+        const { col_id } = req.params;
+        const delCollection = user.collections.id(col_id);
+
+        if (!delCollection) {
+          return next(new errors.NotFoundError('Unable to find subject'));
+        }
+
+        // Create new array without the chosen collection
+        const newCollections = user.collections.filter(
+          c => c._id !== delCollection._id
+        );
+        console.log(newCollections);
+
+        // Update the database
+        user.collections = newCollections;
+        const updatedUser = await user.save();
+
+        // Send the new array to the client
+        res.send(updatedUser.collections);
+        return next();
+      } catch (err) {
+        return next(new errors.NotFoundError(err));
+      }
+    }
+  );
 
   // Delete All Collections
 };
