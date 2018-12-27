@@ -47,8 +47,6 @@ module.exports = server => {
       try {
         // Attempt to locate the current user
         const user = await User.findById(req.user._id);
-        // TODO: remove console log
-        console.log(user);
         if (!user) {
           return next(new errors.NotFoundError('No such user'));
         }
@@ -57,8 +55,6 @@ module.exports = server => {
         const subjectAlreadyExists = user.collections.find(
           col => col.subject === subject
         );
-        // TODO: remove console log
-        console.log(subjectAlreadyExists);
         if (subjectAlreadyExists) {
           return next(
             new errors.ConflictError('That subject has already been added')
@@ -73,8 +69,6 @@ module.exports = server => {
 
         user.collections.unshift(newCollection);
         const updatedUser = await user.save();
-        // TODO: remove this console log
-        console.log(updatedUser);
         res.send(updatedUser.collections);
         return next();
       } catch (err) {
