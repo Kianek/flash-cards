@@ -118,4 +118,22 @@ module.exports = server => {
   );
 
   // Delete All Collections
+  server.del(
+    `${collectionsUrl}/delete-all`,
+    rjwt({ secret: config.JWT_SECRET }),
+    async (req, res, next) => {
+      try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+          return next(new errors.NotFoundError('User not found'));
+        }
+
+        // Set user's collections to an empty array
+      } catch (err) {
+        // TODO: fill in with proper error object
+        return next(false);
+      }
+    }
+  );
 };
